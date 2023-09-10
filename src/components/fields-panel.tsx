@@ -1,22 +1,29 @@
 import { Card } from "@radix-ui/themes";
 import { FORM_COMPONENTS } from "../constants";
-import FormGenerator from "./form-generator";
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
+import { useAppDispatch } from "../hooks/store";
+import { setDroppedItem } from "../store/slices/general-slice";
 
 function FieldsPanel() {
+  const dispatch = useAppDispatch();
+
   return (
     <Card className="w-full">
       {FORM_COMPONENTS.map((component, idx) => (
-        <div
+        <Card
           key={idx}
-          className="mb-2 w-full"
+          color="black"
+          className="field-item"
           draggable={true}
           unselectable="on"
-          onDragStart={(e) =>
-            e.dataTransfer.setData("text/plain", JSON.stringify(component))
-          }
+          onDragStart={(e) => {
+            e.dataTransfer.setData("text/plain", JSON.stringify(component));
+            dispatch(setDroppedItem(component));
+          }}
         >
-          <FormGenerator name={component.name} />
-        </div>
+          <DragHandleDots2Icon className="inline-flex my-auto opacity-50 mr-2" />
+          {component.name}
+        </Card>
       ))}
     </Card>
   );

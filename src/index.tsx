@@ -1,11 +1,13 @@
 import FieldsPanel from "./components/fields-panel";
 import FormPreview, { FormPreviewProps } from "./components/form-preview";
+import { useAppSelector } from "./hooks/store";
 
 function App() {
+  const droppedItem = useAppSelector((state) => state.general.droppedItem);
+
   const defaultProps: FormPreviewProps = {
     className: "min-h-[20rem]",
-    items: 5,
-    rowHeight: 30,
+    rowHeight: 35,
     cols: 3,
   };
 
@@ -16,7 +18,7 @@ function App() {
       </h1>
       <div className="flex max-w-4xl mx-auto space-x-4 justify-center w-full">
         <FieldsPanel />
-        <FormPreview {...defaultProps} />
+        <FormPreview droppingItem={{ i: "placeholder", ...droppedItem}} {...defaultProps} />
       </div>
     </div>
   );

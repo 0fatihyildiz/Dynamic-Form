@@ -1,9 +1,13 @@
 import { TextField } from "@radix-ui/themes";
 
-function FormTextField() {
+interface Props {
+  placeholder?: string
+}
+
+function FormTextField({ placeholder = "TextField" }: Props) {
   return (
-    <TextField.Root>
-      <TextField.Input placeholder="Search the docs…" />
+    <TextField.Root className="w-full h-full">
+      <TextField.Input placeholder={placeholder} />
     </TextField.Root>
   );
 }
