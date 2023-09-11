@@ -1,4 +1,5 @@
 import { Layout } from "react-grid-layout";
+import { FormElement } from "../components/shared/form-generator";
 
 function arrangeLayout(layout: Layout[]): Layout[] {
   const sortedLayout = layout.sort((a, b) => {
@@ -21,9 +22,9 @@ function createIDGenerator() {
     return uniqueID;
   }
 
-  function resolveUniqueID(uniqueID: string): [string, string] {
+  function resolveUniqueID(uniqueID: string): [FormElement, string] {
     const [componentName, id] = uniqueID.split("_");
-    return [componentName, id];
+    return [componentName as FormElement, id];
   }
 
   return {
