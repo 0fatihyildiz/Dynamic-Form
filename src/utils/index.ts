@@ -1,5 +1,10 @@
 import { Layout } from "react-grid-layout";
 import { FormElement } from "../components/shared/form-generator";
+import { FormComponentProps } from "../constants";
+
+interface ExtractObject {
+  [key: string]: string | FormComponentProps;
+}
 
 function arrangeLayout(layout: Layout[]): Layout[] {
   const sortedLayout = layout.sort((a, b) => {
@@ -33,5 +38,18 @@ function createIDGenerator() {
   };
 }
 
+function extractCurrentValues(obj: FormComponentProps): ExtractObject {
+  const result: ExtractObject = {};
 
-export { arrangeLayout, createIDGenerator };
+  for (const key in obj) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (obj.hasOwnProperty(key) && key !== "values") {
+      result[key] = obj[key as never]["current"] || "";
+    } else
+      result[key] = obj[key as never]
+  }
+
+  return result;
+}
+
+export { arrangeLayout, createIDGenerator, extractCurrentValues };

@@ -7,13 +7,17 @@ import {
   Select,
 } from "@radix-ui/themes";
 import { useAppDispatch, useAppSelector } from "../../hooks/store";
-import { setFieldDialogOpen } from "../../store/slices/general-slice";
-import { createIDGenerator } from "../../utils";
+import {
+  setFieldDialogOpen,
+  setLayoutProps,
+} from "../../store/slices/general-slice";
+import { createIDGenerator, extractCurrentValues } from "../../utils";
 import { FORM_COMPONENTS_PROPS } from "../../constants";
 import { FormElement } from "./form-generator";
 
 function FieldDialog() {
   const dispatch = useAppDispatch();
+  const layoutProps = useAppSelector((state) => state.general.layoutProps);
   const fieldDialog = useAppSelector((state) => state.general.fieldDialog);
   const { open, id, callback } = fieldDialog;
   const { resolveUniqueID } = createIDGenerator();
@@ -39,6 +43,13 @@ function FieldDialog() {
   }
 
   function handleSave() {
+    dispatch(
+      setLayoutProps(
+        Object.assign({}, layoutProps, {
+          [id]: extractCurrentValues(fieldProps as never),
+        })
+      )
+    );
     callback(fieldProps);
     dispatch(setFieldDialogOpen({ ...fieldDialog, open: false }));
   }
@@ -51,7 +62,6 @@ function FieldDialog() {
     <Dialog.Root open={open}>
       <Dialog.Content style={{ maxWidth: 450 }}>
         <Dialog.Title>Add Form Element</Dialog.Title>
-        {/* {JSON.stringify(fieldProps)} */}
         <form>
           <Flex direction="column" gap="3">
             {fieldProps &&
@@ -69,7 +79,7 @@ function FieldDialog() {
                     </Text>
                     {typeof item[1] === "string" ? (
                       <TextField.Input
-                        defaultValue={item[1] || item[0]}
+                        defaultValue={item[1]}
                         name={item[0]}
                         placeholder={
                           item[0].charAt(0).toUpperCase() + item[0].slice(1)

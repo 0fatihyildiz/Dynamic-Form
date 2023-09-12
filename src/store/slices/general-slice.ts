@@ -36,7 +36,13 @@ const generalSlice = createSlice({
       state.cols = action.payload;
     },
     setDroppedItem: (state, action: PayloadAction<FormComponent>) => {
-      state.droppedItem = action.payload
+      state.droppedItem = action.payload;
+    },
+    setLayoutProps: (
+      state,
+      action: PayloadAction<GeneralState["layoutProps"]>
+    ) => {
+      state.layoutProps = { ...state.layoutProps, ...action.payload };
     },
     setFieldDialogOpen: (
       state,
@@ -47,6 +53,6 @@ const generalSlice = createSlice({
   },
 });
 
-export const { setDroppedItem, setCols, setFieldDialogOpen } =
+export const { setDroppedItem, setCols, setFieldDialogOpen, setLayoutProps } =
   generalSlice.actions;
 export default generalSlice.reducer;
