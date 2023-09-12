@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
 import {
   Button,
   Dialog,
@@ -29,15 +26,20 @@ function FieldDialog() {
     value,
   }: {
     name: keyof typeof fieldProps;
-    value: string | { current: string; values: string[] };
+    value: never;
   }) {
-    if ((fieldProps[name] as any).values)
-      (fieldProps[name] as any).current = value;
-    else (fieldProps[name] as any) = value;
+    if (
+      typeof fieldProps[name] === "object" &&
+      "values" in (fieldProps[name] as object)
+    ) {
+      (fieldProps[name] as { current: string }).current = value;
+    } else {
+      (fieldProps[name] as string) = value;
+    }
   }
 
   function handleSave() {
-    callback();
+    callback(fieldProps);
     dispatch(setFieldDialogOpen({ ...fieldDialog, open: false }));
   }
 
@@ -48,7 +50,7 @@ function FieldDialog() {
   return (
     <Dialog.Root open={open}>
       <Dialog.Content style={{ maxWidth: 450 }}>
-        <Dialog.Title>Add Field</Dialog.Title>
+        <Dialog.Title>Add Form Element</Dialog.Title>
         {/* {JSON.stringify(fieldProps)} */}
         <form>
           <Flex direction="column" gap="3">
@@ -67,18 +69,19 @@ function FieldDialog() {
                     </Text>
                     {typeof item[1] === "string" ? (
                       <TextField.Input
-                        defaultValue={item[1]}
+                        defaultValue={item[1] || item[0]}
                         name={item[0]}
                         placeholder={
                           item[0].charAt(0).toUpperCase() + item[0].slice(1)
                         }
-                        onChange={(e) => handleInputChange(e.target as any)}
+                        onChange={(e) => handleInputChange(e.target as never)}
                       />
                     ) : (
                       <Select.Root
                         onValueChange={(value) =>
-                          handleInputChange({ name: item[0] as any, value })
+                          handleInputChange({ name: item[0], value } as never)
                         }
+                        defaultValue={item[1].current || item[1].values[0]}
                       >
                         <Select.Trigger
                           className="w-full capitalize"
@@ -86,7 +89,6 @@ function FieldDialog() {
                           placeholder={
                             item[0].charAt(0).toUpperCase() + item[0].slice(1)
                           }
-                          defaultValue={item[1].current}
                         />
                         <Select.Content>
                           <Select.Group>

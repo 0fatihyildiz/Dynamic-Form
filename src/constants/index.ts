@@ -6,6 +6,9 @@ import {
 } from "@radix-ui/themes";
 import { FormElement } from "../components/shared/form-generator";
 
+export type FormCompPropVariant = typeof textFieldPropDefs.variant.values |  typeof textAreaPropDefs.variant.values | typeof selectTriggerPropDefs.variant.values | typeof buttonPropDefs.variant.values
+export type ArrayToUnion<T extends ReadonlyArray<string>> = T[number];
+
 export interface FormComponent {
   name: FormElement;
   minW?: number;
@@ -55,6 +58,7 @@ const FORM_COMPONENTS: FormComponent[] = [
     h: 1,
   },
 ];
+
 
 const FORM_COMPONENTS_PROPS = {
   TextField: {
