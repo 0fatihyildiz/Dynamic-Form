@@ -44,9 +44,10 @@ function extractCurrentValues(obj: FormComponentProps): ExtractObject {
   for (const key in obj) {
     // eslint-disable-next-line no-prototype-builtins
     if (obj.hasOwnProperty(key) && key !== "values") {
-      result[key] = obj[key as never]["current"] || "";
-    } else
-      result[key] = obj[key as never]
+      if (obj[key as never]?.["current"]) {
+        result[key] = obj[key as never]["current"] || "";
+      } else result[key] = obj[key as never] || "";
+    }
   }
 
   return result;

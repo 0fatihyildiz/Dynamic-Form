@@ -63,60 +63,60 @@ const FORM_COMPONENTS: FormComponent[] = [
 const FORM_COMPONENTS_PROPS = {
   TextField: {
     label: "",
-    placeholder: "",
+    placeholder: "TextField",
     variant: {
-      current: "",
+      current: textFieldPropDefs.variant.values[2],
       values: textFieldPropDefs.variant.values,
     },
     color: {
-      current: "",
+      current: textFieldPropDefs.color.values[25],
       values: textFieldPropDefs.color.values,
     },
     radius: {
-      current: "",
+      current: textFieldPropDefs.radius.values[2],
       values: textFieldPropDefs.radius.values,
     },
   },
   TextArea: {
     label: "",
-    placeholder: "",
+    placeholder: "TextArea",
     variant: {
-      current: "",
+      current: textAreaPropDefs.variant.values[2],
       values: textAreaPropDefs.variant.values,
     },
     color: {
-      current: "",
+      current: textAreaPropDefs.color.values[25],
       values: textAreaPropDefs.color.values,
     },
   },
   Select: {
     label: "",
-    placeholder: "",
+    placeholder: "Select",
     variant: {
-      current: "",
+      current: selectTriggerPropDefs.variant.values[2],
       values: selectTriggerPropDefs.variant.values,
     },
     color: {
-      current: "",
+      current: selectTriggerPropDefs.color.values[25],
       values: selectTriggerPropDefs.color.values,
     },
     radius: {
-      current: "",
+      current: selectTriggerPropDefs.radius.values[2],
       values: selectTriggerPropDefs.radius.values,
     },
   },
   Button: {
-    label: "",
+    label: "Button",
     variant: {
-      current: "",
+      current: buttonPropDefs.variant.values[1],
       values: buttonPropDefs.variant.values,
     },
     color: {
-      current: "",
+      current: buttonPropDefs.color.values[10],
       values: buttonPropDefs.color.values,
     },
     radius: {
-      current: "",
+      current: buttonPropDefs.radius.values[2],
       values: buttonPropDefs.radius.values,
     },
   },

@@ -12,7 +12,7 @@ interface Props {
 function FormSelect(props: Props) {
   return (
     <Select.Root>
-      <Select.Trigger className="w-full h-full" {...props} />
+      <Select.Trigger className="w-full h-full" {...props} color="indigo" variant="soft" />
       <Select.Content position="popper">
         <Select.Item value="apple">Apple</Select.Item>
         <Select.Item value="orange">Orange</Select.Item>

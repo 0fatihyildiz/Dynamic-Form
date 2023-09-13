@@ -14,6 +14,7 @@ import {
 import { createIDGenerator, extractCurrentValues } from "../../utils";
 import { FORM_COMPONENTS_PROPS } from "../../constants";
 import { FormElement } from "./form-generator";
+import { FormEvent } from "react";
 
 function FieldDialog() {
   const dispatch = useAppDispatch();
@@ -42,15 +43,20 @@ function FieldDialog() {
     }
   }
 
-  function handleSave() {
-    dispatch(
+  const isHasKey = layoutProps[id];
+
+  async function handleSave(e: FormEvent) {
+    e.preventDefault();
+
+    await dispatch(
       setLayoutProps(
         Object.assign({}, layoutProps, {
           [id]: extractCurrentValues(fieldProps as never),
         })
       )
     );
-    callback(fieldProps);
+
+    if (!isHasKey) callback(fieldProps);
     dispatch(setFieldDialogOpen({ ...fieldDialog, open: false }));
   }
 
@@ -61,11 +67,16 @@ function FieldDialog() {
   return (
     <Dialog.Root open={open}>
       <Dialog.Content style={{ maxWidth: 450 }}>
-        <Dialog.Title>Add Form Element</Dialog.Title>
-        <form>
+        <Dialog.Title>
+          {isHasKey ? "Edit" : "Add"} {componentName} Element
+        </Dialog.Title>
+        <form onSubmit={handleSave}>
           <Flex direction="column" gap="3">
             {fieldProps &&
               Object.entries(fieldProps).map((item, idx) => {
+                const defaultValue =
+                  layoutProps[id] && (layoutProps[id] as never)[item[0]];
+
                 return (
                   <label key={idx}>
                     <Text
@@ -79,7 +90,7 @@ function FieldDialog() {
                     </Text>
                     {typeof item[1] === "string" ? (
                       <TextField.Input
-                        defaultValue={item[1]}
+                        defaultValue={defaultValue || item[1]}
                         name={item[0]}
                         placeholder={
                           item[0].charAt(0).toUpperCase() + item[0].slice(1)
@@ -91,7 +102,7 @@ function FieldDialog() {
                         onValueChange={(value) =>
                           handleInputChange({ name: item[0], value } as never)
                         }
-                        defaultValue={item[1].current || item[1].values[0]}
+                        defaultValue={defaultValue || item[1].current}
                       >
                         <Select.Trigger
                           className="w-full capitalize"
@@ -123,20 +134,18 @@ function FieldDialog() {
                 );
               })}
           </Flex>
-        </form>
 
-        <Flex gap="3" mt="4" justify="end">
-          <Dialog.Close>
-            <Button onClick={handleClose} variant="soft" color="gray">
-              Cancel
-            </Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button type="submit" onClick={handleSave}>
-              Add
-            </Button>
-          </Dialog.Close>
-        </Flex>
+          <Flex gap="3" mt="4" justify="end">
+            <Dialog.Close>
+              <Button onClick={handleClose} variant="soft" color="gray">
+                Cancel
+              </Button>
+            </Dialog.Close>
+            <Dialog.Close>
+              <Button type="submit">{isHasKey ? "Edit" : "Add"}</Button>
+            </Dialog.Close>
+          </Flex>
+        </form>
       </Dialog.Content>
     </Dialog.Root>
   );

@@ -66,6 +66,7 @@ function FormPreview(props: FormPreviewProps) {
       setFieldDialogOpen({
         open: true,
         id,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         callback: (fieldProps) => {
           console.log(fieldProps);
           const newItem = {

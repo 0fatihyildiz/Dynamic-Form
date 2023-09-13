@@ -18,9 +18,7 @@ const Elements = {
   Button: <FormButton />,
 };
 
-function FormGenerator({ name, props }: FormProps) {
-  console.log(name, props, 'FormGenerator');
-  
+function FormGenerator({ name, props }: FormProps) {  
   return (
     <div className="pointer-events-none select-none w-full h-full">
       {React.cloneElement(Elements[name], props)}
