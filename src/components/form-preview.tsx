@@ -68,7 +68,7 @@ function FormPreview(props: FormPreviewProps) {
         id,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         callback: (fieldProps) => {
-          console.log(fieldProps);
+          // console.log(fieldProps);
           const newItem = {
             ...layoutItem,
             ...droppedItem,
