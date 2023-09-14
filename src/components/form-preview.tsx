@@ -23,7 +23,6 @@ type DroppableEvent = Event & {
 };
 
 function FormPreview(props: FormPreviewProps) {
-  // const [layout, setLayout] = useState<Layout[]>([]);
   const { layout, setLayout } = props
   const [mounted, setMounted] = useState(false);
 
@@ -66,9 +65,7 @@ function FormPreview(props: FormPreviewProps) {
       setFieldDialogOpen({
         open: true,
         id,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        callback: (fieldProps) => {
-          // console.log(fieldProps);
+        callback: () => {
           const newItem = {
             ...layoutItem,
             ...droppedItem,

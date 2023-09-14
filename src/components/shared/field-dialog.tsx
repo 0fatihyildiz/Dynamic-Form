@@ -12,7 +12,7 @@ import {
   setLayoutProps,
 } from "../../store/slices/general-slice";
 import { createIDGenerator, extractCurrentValues } from "../../utils";
-import { FORM_COMPONENTS_PROPS, FormComponentProps } from "../../constants";
+import { FORM_COMPONENTS_PROPS } from "../../constants";
 import { FormElement } from "./form-generator";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -26,7 +26,7 @@ function FieldDialog() {
   const [componentName]: [FormElement, string] = resolveUniqueID(id);
   const fieldProps = Object.assign({}, FORM_COMPONENTS_PROPS[componentName]);
 
-  const [formData, setFormData] = useState({...fieldProps});
+  const [formData, setFormData] = useState({});
 
   function handleInputChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -38,7 +38,8 @@ function FieldDialog() {
   const isHasKey = layoutProps[id];
 
   useEffect(() => {
-    if (open && isHasKey) setFormData({ ...layoutProps as never[id] });
+    if (open && isHasKey) setFormData({ ...layoutProps[id] });
+    else setFormData({});
   }, [id, isHasKey, layoutProps, open]);
 
   async function handleSave(e: FormEvent) {
@@ -47,7 +48,7 @@ function FieldDialog() {
     await dispatch(
       setLayoutProps(
         Object.assign({}, layoutProps, {
-          [id]: extractCurrentValues(formData as never),
+          [id]: extractCurrentValues({ ...fieldProps, ...formData } as never),
         })
       )
     );
@@ -86,7 +87,7 @@ function FieldDialog() {
                     </Text>
                     {typeof item[1] === "string" ? (
                       <TextField.Input
-                        value={formData[item[0] as never]}
+                        value={formData[item[0] as never] || ""}
                         name={item[0]}
                         placeholder={
                           item[0].charAt(0).toUpperCase() + item[0].slice(1)
