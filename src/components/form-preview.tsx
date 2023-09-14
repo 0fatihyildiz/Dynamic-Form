@@ -14,8 +14,8 @@ export interface FormPreviewProps extends CoreProps {
   items?: number;
   cols?: number;
   onLayoutChange?: (layout: Layout[]) => void;
-  layout: Layout[]
-  setLayout: React.Dispatch<React.SetStateAction<Layout[]>>
+  layout: Layout[];
+  setLayout: React.Dispatch<React.SetStateAction<Layout[]>>;
 }
 
 type DroppableEvent = Event & {
@@ -23,12 +23,13 @@ type DroppableEvent = Event & {
 };
 
 function FormPreview(props: FormPreviewProps) {
-  const { layout, setLayout } = props
+  const { layout, setLayout } = props;
   const [mounted, setMounted] = useState(false);
 
   const droppedItem = useAppSelector((state) => state.general.droppedItem);
   const stateDroppedIte = { ...droppedItem };
   const cols = useAppSelector((state) => state.general.cols);
+  const preview = useAppSelector((state) => state.general.preview);
   const dispatch = useAppDispatch();
 
   const { generateUniqueID } = createIDGenerator();
@@ -49,7 +50,6 @@ function FormPreview(props: FormPreviewProps) {
   function onLayoutChange(Newlayout: Layout[]) {
     const filteredLayout = Newlayout.filter((item) => item.i !== "placeholder");
     setLayout(filteredLayout);
-
   }
 
   const onDrop = (
@@ -80,17 +80,20 @@ function FormPreview(props: FormPreviewProps) {
     );
   };
   return (
-    <Card className="flex-shrink-0 max-w-xl min-h-[24rem] mx-auto w-full">
-      <ReactGridLayout
-        onDrop={onDrop}
-        useCSSTransforms={mounted}
-        isDroppable={mounted}
-        droppingItem={{ i: "placeholder", w: cols, ...stateDroppedIte }}
-        {...props}
-        onLayoutChange={onLayoutChange}
-      >
-        {GenerateDOM({ layout, setLayout })}
-      </ReactGridLayout>
+    <Card className="min-h-[24rem] mx-auto w-full max-w-2xl">
+        <ReactGridLayout
+          onDrop={onDrop}
+          useCSSTransforms={mounted}
+          droppingItem={{ i: "placeholder", w: cols, ...stateDroppedIte }}
+          {...props}
+          className="min-h-[20rem] mx-auto w-full flex flex-col items-start"
+          onLayoutChange={onLayoutChange}
+          isResizable={!preview}
+          isDroppable={mounted && !preview}
+          isBounded={preview}
+        >
+          {GenerateDOM({ layout, setLayout })}
+        </ReactGridLayout>
       {!layout?.length && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50 -mt-6 pointer-events-none">
           <Lottie animationData={DragLottie} />

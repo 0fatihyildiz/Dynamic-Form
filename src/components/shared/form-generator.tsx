@@ -9,6 +9,7 @@ export type FormElement = keyof typeof Elements;
 interface FormProps {
   name: FormElement;
   props?: FormComponentProps;
+  preview: boolean;
 }
 
 const Elements = {
@@ -18,9 +19,13 @@ const Elements = {
   Button: <FormButton />,
 };
 
-function FormGenerator({ name, props }: FormProps) {  
+function FormGenerator({ name, props, preview }: FormProps) {
   return (
-    <div className="pointer-events-none select-none w-full h-full">
+    <div
+      className={`${
+        !preview && "pointer-events-none select-none"
+      } w-full h-full`}
+    >
       {React.cloneElement(Elements[name], props)}
     </div>
   );

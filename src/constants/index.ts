@@ -65,7 +65,7 @@ const FORM_COMPONENTS_PROPS = {
     label: "",
     placeholder: "TextField",
     variant: {
-      current: textFieldPropDefs.variant.values[2],
+      current: textFieldPropDefs.variant.values[1],
       values: textFieldPropDefs.variant.values,
     },
     color: {
@@ -81,7 +81,7 @@ const FORM_COMPONENTS_PROPS = {
     label: "",
     placeholder: "TextArea",
     variant: {
-      current: textAreaPropDefs.variant.values[2],
+      current: textAreaPropDefs.variant.values[1],
       values: textAreaPropDefs.variant.values,
     },
     color: {
@@ -93,7 +93,7 @@ const FORM_COMPONENTS_PROPS = {
     label: "",
     placeholder: "Select",
     variant: {
-      current: selectTriggerPropDefs.variant.values[2],
+      current: selectTriggerPropDefs.variant.values[1],
       values: selectTriggerPropDefs.variant.values,
     },
     color: {

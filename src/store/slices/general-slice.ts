@@ -7,6 +7,7 @@ import {
 } from "../../constants";
 import { FormElement } from "../../components/shared/form-generator";
 interface GeneralState {
+  preview: boolean;
   cols: number;
   layoutProps: { [key: string]: FormComponentProps };
   droppedItem: FormComponent;
@@ -18,6 +19,7 @@ interface GeneralState {
 }
 
 const initialState: GeneralState = {
+  preview: false,
   cols: 3,
   layoutProps: {},
   droppedItem: FORM_COMPONENTS[0],
@@ -32,6 +34,9 @@ const generalSlice = createSlice({
   name: "general",
   initialState,
   reducers: {
+    setPreview: (state, action: PayloadAction<boolean>) => {
+      state.preview = action.payload
+    },
     setCols: (state, action: PayloadAction<number>) => {
       state.cols = action.payload;
     },
@@ -53,6 +58,6 @@ const generalSlice = createSlice({
   },
 });
 
-export const { setDroppedItem, setCols, setFieldDialogOpen, setLayoutProps } =
+export const { setDroppedItem, setCols, setFieldDialogOpen, setLayoutProps, setPreview } =
   generalSlice.actions;
 export default generalSlice.reducer;
