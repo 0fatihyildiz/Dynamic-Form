@@ -3,7 +3,7 @@ import { FormElement } from "../components/shared/form-generator";
 import { FormComponentProps } from "../constants";
 
 interface ExtractObject {
-  [key: string]: string | FormComponentProps;
+  [key: string]: string | boolean | FormComponentProps;
 }
 
 function arrangeLayout(layout: Layout[]): Layout[] {
@@ -46,7 +46,11 @@ function extractCurrentValues(obj: FormComponentProps): ExtractObject {
     if (obj.hasOwnProperty(key) && key !== "values") {
       if (obj[key as never]?.["current"]) {
         result[key] = obj[key as never]["current"] || "";
-      } else result[key] = obj[key as never] || "";
+      } else if (typeof obj[key as never] === 'string') {
+        result[key] = obj[key as never] || ""
+      } else {
+        result[key] = Boolean(obj[key as never]);
+      }
     }
   }
 

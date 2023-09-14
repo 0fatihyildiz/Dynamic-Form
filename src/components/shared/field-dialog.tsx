@@ -5,6 +5,7 @@ import {
   TextField,
   Text,
   Select,
+  Checkbox,
 } from "@radix-ui/themes";
 import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import {
@@ -12,7 +13,7 @@ import {
   setLayoutProps,
 } from "../../store/slices/general-slice";
 import { createIDGenerator, extractCurrentValues } from "../../utils";
-import { FORM_COMPONENTS_PROPS } from "../../constants";
+import { FORM_COMPONENTS_PROPS, FormComponentProps } from "../../constants";
 import { FormElement } from "./form-generator";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -26,7 +27,7 @@ function FieldDialog() {
   const [componentName]: [FormElement, string] = resolveUniqueID(id);
   const fieldProps = Object.assign({}, FORM_COMPONENTS_PROPS[componentName]);
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<FormComponentProps | object>({});
 
   function handleInputChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -38,17 +39,21 @@ function FieldDialog() {
   const isHasKey = layoutProps[id];
 
   useEffect(() => {
-    if (open && isHasKey) setFormData({ ...layoutProps[id] });
+    if (open && isHasKey) setFormData({ ...(layoutProps[id] as unknown as object) });
     else setFormData({});
   }, [id, isHasKey, layoutProps, open]);
 
-  async function handleSave(e: FormEvent) {
+  function handleSave(e: FormEvent) {
     e.preventDefault();
-
-    await dispatch(
+    
+    dispatch(
       setLayoutProps(
         Object.assign({}, layoutProps, {
-          [id]: extractCurrentValues({ ...fieldProps, ...formData } as never),
+          [id]: extractCurrentValues({
+            ...fieldProps,
+            ...formData,
+            name: (formData as { name: string }).name || id,
+          } as never),
         })
       )
     );
@@ -76,15 +81,17 @@ function FieldDialog() {
 
                 return (
                   <label key={idx}>
-                    <Text
-                      as="div"
-                      className="capitalize"
-                      size="2"
-                      mb="1"
-                      weight="bold"
-                    >
-                      {item[0]}
-                    </Text>
+                    {typeof item[1] !== "boolean" && (
+                      <Text
+                        as="div"
+                        className="capitalize"
+                        size="2"
+                        mb="1"
+                        weight="bold"
+                      >
+                        {item[0]}
+                      </Text>
+                    )}
                     {typeof item[1] === "string" ? (
                       <TextField.Input
                         value={formData[item[0] as never] || ""}
@@ -94,7 +101,7 @@ function FieldDialog() {
                         }
                         onChange={handleInputChange}
                       />
-                    ) : (
+                    ) : typeof item[1] === "object" ? (
                       <Select.Root
                         onValueChange={(value) =>
                           handleInputChange({
@@ -129,6 +136,21 @@ function FieldDialog() {
                           </Select.Group>
                         </Select.Content>
                       </Select.Root>
+                    ) : (
+                      <label className="capitalize">
+                        <Checkbox
+                          value={formData[item[0] as never]}
+                          name={item[0]}
+                          onChange={(value) =>
+                            handleInputChange({
+                              name: item[0],
+                              value,
+                            } as never)
+                          }
+                          mr="1"
+                        />
+                        {item[0]}
+                      </label>
                     )}
                   </label>
                 );

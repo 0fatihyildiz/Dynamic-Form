@@ -21,6 +21,7 @@ function App() {
 
   const defaultProps: FormPreviewProps = {
     rowHeight: 35,
+    className: "min-h-[20rem] mx-auto max-w-2xl w-full flex flex-col items-start",
     cols,
     layout,
     setLayout,
@@ -31,7 +32,7 @@ function App() {
       return { ...layoutItem, isDraggable: !preview };
     });
     setLayout(isPreview);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview]);
 
   function formatCode(data: Layout[], indentation: number = 2): string {
@@ -81,16 +82,14 @@ function App() {
         </div>
       </div>
       <div className="flex max-w-7xl mx-auto space-x-4 justify-center w-full">
-        {!preview && <FieldsPanel />}
+        <FieldsPanel />
         <FormPreview {...defaultProps} />
-        {!preview && (
-          <ScrollArea
-            type="hover"
-            className="p-2 !h-full border border-zinc-200 shadow-sm max-h-[24rem] whitespace-break-spaces rounded-md text-sm font-mono"
-          >
-            {formatCode(layout, 2)}
-          </ScrollArea>
-        )}
+        <ScrollArea
+          type="hover"
+          className="p-2 !h-full border border-zinc-200 shadow-sm max-h-[24rem] whitespace-break-spaces rounded-md text-sm font-mono"
+        >
+          {formatCode(layout, 2)}
+        </ScrollArea>
       </div>
     </div>
   );

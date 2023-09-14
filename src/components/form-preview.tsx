@@ -6,7 +6,8 @@ import { GenerateDOM } from "./shared/generate-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/store";
 import Lottie from "lottie-react";
 import DragLottie from "../assets/lottie/drag.json";
-import { setFieldDialogOpen } from "../store/slices/general-slice";
+import PreviewLottie from "../assets/lottie/preview.json";
+import { setFieldDialogOpen, setPreviewFormData } from "../store/slices/general-slice";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -64,7 +65,7 @@ function FormPreview(props: FormPreviewProps) {
     dispatch(
       setFieldDialogOpen({
         open: true,
-        id,
+        id: id,
         callback: () => {
           const newItem = {
             ...layoutItem,
@@ -79,14 +80,29 @@ function FormPreview(props: FormPreviewProps) {
       })
     );
   };
+
+  function handleFormSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const data = Object.fromEntries(formData.entries());
+
+    dispatch(setPreviewFormData(data))
+  }
+
   return (
     <Card className="min-h-[24rem] mx-auto w-full max-w-2xl">
+      {preview && (
+        <div className="py-2 px-4 text-sm font-medium w-full -mt-1 rounded-full bg-indigo-100 text-indigo-500">
+          Preview mode on
+        </div>
+      )}
+      <form onSubmit={handleFormSubmit}>
         <ReactGridLayout
           onDrop={onDrop}
           useCSSTransforms={mounted}
           droppingItem={{ i: "placeholder", w: cols, ...stateDroppedIte }}
           {...props}
-          className="min-h-[20rem] mx-auto w-full flex flex-col items-start"
           onLayoutChange={onLayoutChange}
           isResizable={!preview}
           isDroppable={mounted && !preview}
@@ -94,10 +110,15 @@ function FormPreview(props: FormPreviewProps) {
         >
           {GenerateDOM({ layout, setLayout })}
         </ReactGridLayout>
+      </form>
       {!layout?.length && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50 -mt-6 pointer-events-none">
-          <Lottie animationData={DragLottie} />
-          <p className="text-center -mt-12 text-xs">Drap and drop items here</p>
+          <Lottie animationData={preview ? PreviewLottie : DragLottie} />
+          <p className="text-center -mt-6 text-xs">
+            {preview
+              ? "There is no form element to preview"
+              : "Drap and drop items here"}
+          </p>
         </div>
       )}
     </Card>
