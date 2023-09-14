@@ -39,7 +39,7 @@ function FieldDialog() {
   const isHasKey = layoutProps[id];
 
   useEffect(() => {
-    if (open && isHasKey) setFormData({ ...(layoutProps[id] as unknown as object) });
+    if (open && isHasKey) setFormData({ ...layoutProps[id] });
     else setFormData({});
   }, [id, isHasKey, layoutProps, open]);
 
